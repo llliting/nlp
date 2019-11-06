@@ -1,17 +1,36 @@
 
-import pandas as pd
 import nltk
-from pandas import DataFrame
+import re
+import pandas as pd
 import numpy as np
 import os
-import xlwt
-import math
-from nltk import word_tokenize
+from nltk.tokenize import word_tokenize
+from nltk.probability import FreqDist
 
-df = pd.read_csv("/Users/liting/Desktop/ProQuestDocuments-2019-11-01.csv")
+#access the data
+data = pd.read_csv("/cps/home/lhuang1/Desktop/nlp/ProQuestDocuments-2019-11-01.csv")
+titles = data["Title"]
+abstract = data["Abstract"]
+wnl = nltk.WordNetLemmatizer()
 
-titles = df["Title"]
+#analyze the abstracts
+fdist_abs = FreqDist()
+for abst in abstract:
+    if(type(abst) is str):
+        abst = re.sub(r'[^\w\s]','',abst)
+        for word in word_tokenize(abst):
+            word = wnl.lemmatize(word)
+            fdist_abs[word.lower()] += 1
+print("frequent words in the abstracts: \n" , fdist_abs.most_common(100))
 
 
-abstract = df["Abstract"]
+#analyze the titles
+fdist_tit = FreqDist()
+for title in titles:
+    if(type(title) is str):
+        title = re.sub(r'[^\w\s]','',title)
+        for word in word_tokenize(title):
+            word = wnl.lemmatize(word)
+            fdist_tit[word.lower()] += 1
+print("\n\nfrequent words in the titles: \n" , fdist_tit.most_common(100))
 
