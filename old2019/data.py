@@ -8,7 +8,9 @@ from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 
 #access the data
-data = pd.read_csv("/cps/home/lhuang1/Desktop/nlp/ProQuestDocuments-2019-11-01.csv")
+data = pd.read_csv("/Users/liting/Desktop/nlp/ProQuestDocuments-2019-11-01.csv")
+
+#data = pd.read_csv("/cps/home/lhuang1/Desktop/nlp/ProQuestDocuments-2019-11-01.csv")
 titles = data["Title"]
 abstract = data["Abstract"]
 wnl = nltk.WordNetLemmatizer()
