@@ -20,9 +20,16 @@ fdist_abs = FreqDist()
 for abst in abstract:
     if(type(abst) is str):
         abst = re.sub(r'[^\w\s]','',abst)
-        for word in word_tokenize(abst):
-            word = wnl.lemmatize(word)
-            fdist_abs[word.lower()] += 1
+        tokens = word_tokenize(abst)
+        
+        tokens = nltk.pos_tag(tokens)
+        for word in tokens:
+            #print(type(word))
+            word = list(word)
+            word[0] = wnl.lemmatize(word[0])
+            if word[1] == 'NN' or word[1] == 'JJ' or word[1] == 'VB':
+                fdist_abs[word[0].lower()] += 1
+            #print(word)
 print("frequent words in the abstracts: \n" , fdist_abs.most_common(100))
 
 
@@ -34,5 +41,5 @@ for title in titles:
         for word in word_tokenize(title):
             word = wnl.lemmatize(word)
             fdist_tit[word.lower()] += 1
-print("\n\nfrequent words in the titles: \n" , fdist_tit.most_common(100))
+#print("\n\nfrequent words in the titles: \n" , fdist_tit.most_common(100))
 
