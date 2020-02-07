@@ -16,9 +16,10 @@ abstract = data['Abstract']
 year = data['year']
 date = data['entryDate']
 startPage = data['startPage']
-
 wnl = nltk.WordNetLemmatizer()
 allowed_word_types = ["J","R","V","N"]
+
+
 
 #print(titles)
 #analyze the abstracts
@@ -27,13 +28,16 @@ print("\n\n\n ==============ABSTRACTS===============")
 fdist_abs = FreqDist()
 for abst in abstract:
     if(type(abst) is str):
-        abst = re.sub(r'[^\w\s]','',abst)
-        abst = re.sub(r'Ê', '', abst)
-        for word in word_tokenize(abst):
+        text = abst[abst.find('--')+2:]
+        text = re.sub(r'[^\P{P}-]+', "", text)
+        #re.sub(ur"\p{P}+", "", txt)
+
+        for word in word_tokenize(text):
             if not word in stop_words:
-                abst_list += [word]
                 word = wnl.lemmatize(word)
+                #abst_list += [word]
                 fdist_abs[word.lower()] += 1
+                
 pos_abs = nltk.pos_tag(abst_list)
 trueWords = []
 for pos in pos_abs:
