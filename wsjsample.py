@@ -1,5 +1,9 @@
-#Liting Huang
 
+'''
+@Liting Huang
+issues:
+    "--" double hypenies in freqdict 
+'''
 import nltk
 import re
 import string
