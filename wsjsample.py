@@ -12,13 +12,20 @@ from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 from nltk.corpus import stopwords 
 from nltk.stem import PorterStemmer 
+from afinn import Afinn
+import matplotlib.pyplot as plt
+import numpy as np
+
+
 
 
 
 stop_words = set(stopwords.words('english')) 
 wnl = nltk.WordNetLemmatizer()
 allowed_word_types = ["J","R","V","N"]
-ps = PorterStemmer() 
+ps = PorterStemmer()
+af = Afinn()
+ 
 
 
 #read data
@@ -47,16 +54,36 @@ def freqDic(wordList, freqDic):
             for word in word_tokenize(text):
                 if not word in stop_words:
                     word = wnl.lemmatize(word)
-                    word = ps.stem(word)
+                    #word = ps.stem(word)
                     #abst_list += [word]
                     freqDic[word.lower()] += 1
+                    
+def sentimentScore(corpus):
+    sentiment_scores = []
+    for article in corpus:
+        if(type(article) is str):
+            sentiment_scores += [af.score(article)]
+    return sentiment_scores
+
+
+
+abs_sent = sentimentScore(abstract)
+print("=========Plot sentiment level===========")
+plt.plot(abs_sent)
+print("\n\n\n============plot histogram============")
+plt.hist(abs_sent, density = True, bins = 100)
+plt.hist(abs_sent, density = True, bins = 500)
+plt.hist(abs_sent, density = True, bins = 2000)
+plt.hist(abs_sent, density = True, bins = 5000)
+
+
 
 
 
 #analyze the abstracts
 print("\n\n\n ==============ABSTRACTS===============")
 fdist_abs = FreqDist()
-abst_list = []
+#abst_list = []
 freqDic(abstract, fdist_abs)
 print("most frequent words in the abstracts: \n" , fdist_abs.most_common(100))
 print(" \n\n\n\nleast common words in the abstracts: \n", fdist_abs.most_common()[-100:])
@@ -66,7 +93,7 @@ print("\n\n\nplot top 30 words: ", FreqDist(dict(fdist_abs.most_common(30))).plo
 #anaylze the titles
 print("\n\n\n ==============TITLES===============")
 fdist_tit = FreqDist()
-title_list = []
+#title_list = []
 freqDic(titles, fdist_tit)
 print("most frequent words in the titles: \n" , fdist_tit.most_common(100))
 print(" \n\n\n\nleast common words in the titles: \n", fdist_tit.most_common()[-100:])
@@ -74,38 +101,6 @@ print(" \n\n\n\nleast common words in the titles: \n", fdist_tit.most_common()[-
 
 
 
-
-
-
-
-
-
-
-
-
-'''
-def main():
-    #analyze the abstracts
-    print("\n\n\n ==============ABSTRACTS===============")
-    fdist_abs = FreqDist()
-    abst_list = []
-    freqDic(abstract, fdist_abs)
-    print("most frequent words in the abstracts: \n" , fdist_abs.most_common(100))
-    print(" \n\n\n\nleast common words in the abstracts: \n", fdist_abs.most_common()[-100:])
-    print("\n\n\nplot top 30 words: ", FreqDist(dict(fdist_abs.most_common(30))).plot() )           
-    
-                    
-    #anaylze the titles
-    print("\n\n\n ==============TITLES===============")
-    #analyze the titles
-    fdist_tit = FreqDist()
-    title_list = []
-    freqDic(titles, fdist_tit)
-    print("most frequent words in the titles: \n" , fdist_tit.most_common(100))
-    print(" \n\n\n\nleast common words in the titles: \n", fdist_tit.most_common()[-100:])
-''' 
-    
-    
 
 
 
