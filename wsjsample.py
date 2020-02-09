@@ -11,11 +11,15 @@ import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 from nltk.corpus import stopwords 
+from nltk.stem import PorterStemmer 
+
 
 
 stop_words = set(stopwords.words('english')) 
 wnl = nltk.WordNetLemmatizer()
 allowed_word_types = ["J","R","V","N"]
+ps = PorterStemmer() 
+
 
 #read data
 data = pd.read_csv("/Users/liting/Desktop/nlp/WSJSample.csv",encoding='ISO-8859-1')
@@ -43,9 +47,43 @@ def freqDic(wordList, freqDic):
             for word in word_tokenize(text):
                 if not word in stop_words:
                     word = wnl.lemmatize(word)
+                    word = ps.stem(word)
                     #abst_list += [word]
                     freqDic[word.lower()] += 1
 
+
+
+#analyze the abstracts
+print("\n\n\n ==============ABSTRACTS===============")
+fdist_abs = FreqDist()
+abst_list = []
+freqDic(abstract, fdist_abs)
+print("most frequent words in the abstracts: \n" , fdist_abs.most_common(100))
+print(" \n\n\n\nleast common words in the abstracts: \n", fdist_abs.most_common()[-100:])
+print("\n\n\nplot top 30 words: ", FreqDist(dict(fdist_abs.most_common(30))).plot() )           
+    
+                    
+#anaylze the titles
+print("\n\n\n ==============TITLES===============")
+fdist_tit = FreqDist()
+title_list = []
+freqDic(titles, fdist_tit)
+print("most frequent words in the titles: \n" , fdist_tit.most_common(100))
+print(" \n\n\n\nleast common words in the titles: \n", fdist_tit.most_common()[-100:])
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 def main():
     #analyze the abstracts
     print("\n\n\n ==============ABSTRACTS===============")
@@ -65,7 +103,7 @@ def main():
     freqDic(titles, fdist_tit)
     print("most frequent words in the titles: \n" , fdist_tit.most_common(100))
     print(" \n\n\n\nleast common words in the titles: \n", fdist_tit.most_common()[-100:])
-    
+''' 
     
     
 
