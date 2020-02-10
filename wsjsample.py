@@ -54,7 +54,7 @@ def freqDic(wordList, freqDic):
             for word in word_tokenize(text):
                 if not word in stop_words:
                     word = wnl.lemmatize(word)
-                    #word = ps.stem(word)
+                    word = ps.stem(word)
                     #abst_list += [word]
                     freqDic[word.lower()] += 1
                     
@@ -73,12 +73,13 @@ print("=========Plot sentiment level===========")
 plt.plot(abs_sent)
 plt.show()
 print("\n\n\n============Plot histograms============")
+print("100 samples: ")
 plt.hist(abs_sent, density = True, bins = 100)
 plt.show()
+print("500 samples: ")
 plt.hist(abs_sent, density = True, bins = 500)
 plt.show()
-plt.hist(abs_sent, density = True, bins = 2000)
-plt.show()
+print("5000 samples: ")
 plt.hist(abs_sent, density = True, bins = 5000)
 plt.show()
 
