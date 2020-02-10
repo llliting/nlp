@@ -68,15 +68,19 @@ def sentimentScore(corpus):
 
 
 abs_sent = sentimentScore(abstract)
+
 print("=========Plot sentiment level===========")
 plt.plot(abs_sent)
-print("\n\n\n============plot histograms============")
+plt.show()
+print("\n\n\n============Plot histograms============")
 plt.hist(abs_sent, density = True, bins = 100)
+plt.show()
 plt.hist(abs_sent, density = True, bins = 500)
+plt.show()
 plt.hist(abs_sent, density = True, bins = 2000)
+plt.show()
 plt.hist(abs_sent, density = True, bins = 5000)
-
-
+plt.show()
 
 
 
