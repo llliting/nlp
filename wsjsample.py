@@ -72,6 +72,8 @@ abs_sent = sentimentScore(abstract)
 print("=========Plot sentiment level===========")
 plt.plot(abs_sent)
 plt.show()
+
+'''
 print("\n\n\n============Plot histograms============")
 print("100 samples: ")
 plt.hist(abs_sent, density = True, bins = 100)
@@ -82,7 +84,7 @@ plt.show()
 print("5000 samples: ")
 plt.hist(abs_sent, density = True, bins = 5000)
 plt.show()
-
+'''
 
 
 #analyze the abstracts
