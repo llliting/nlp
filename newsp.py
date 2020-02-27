@@ -69,6 +69,7 @@ def main():
 
 
     #tfidf
+    '''
     uniquewords = set(word_tokenize(articleList[0]))
     for t in articleList:      
         t = removePunc(t)
@@ -93,7 +94,23 @@ def main():
     print("df\n" + df)
     print(uniquewords)
     print(num)
+    '''
+    #vectorizer = TfidfVectorizer()
+    #ectors = vectorizer.fit_transform(articleList)
     
+    
+    vectorizer = TfidfVectorizer()
+    vectors = vectorizer.fit_transform(articleList)
+    feature_names = vectorizer.get_feature_names()
+    dense = vectors.todense()
+    denselist = dense.tolist()
+    df = pd.DataFrame(denselist, columns=feature_names)
+    df = df.transpose()
+    print(df)
+    df.to_csv(r'tfidf.csv')
+
+    
+    #print(vectors)
 main()
     
 
