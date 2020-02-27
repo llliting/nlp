@@ -7,17 +7,29 @@ from nltk.probability import FreqDist
 from nltk.stem import PorterStemmer 
 from nltk.corpus import stopwords 
 from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.tokenize.treebank import TreebankWordDetokenizer
 import pandas as pd
 import math
 
 #from wsjsample.py import sentimentScore
 
-def removePunc(txt):
+def preprocess(txt):
+    wnl = nltk.WordNetLemmatizer()
+    ps = PorterStemmer()
+    stop_words = set(stopwords.words('english')) 
+    dt = TreebankWordDetokenizer()
     remove = string.punctuation
     remove = remove.replace("-", "") # don't remove hyphens
     pattern = r"[{}]".format(remove) # create the pattern
-    txt = re.sub(pattern, "", txt)    
-    return txt
+    txt = re.sub(pattern, "", txt)  
+    words = []
+    for word in word_tokenize(txt):
+            if not word in stop_words:
+                word = wnl.lemmatize(word)
+                word = ps.stem(word)
+                words += [word]
+    dt.detokenize(words)
+    return words
 
 def computeTF(wordDict, bagOfWords):
     tfDict = {}
@@ -44,11 +56,14 @@ def computeTFIDF(tfBagOfWords, idfs):
     return tfidf
 
 def main():
+    #dist = FreqDist()
+    
+    
     fileName = "/Users/liting/Desktop/nlp/articles.txt"
     f = open(fileName,"r",encoding="utf-8" )
     urlList = f.readlines()
     articleList = []
-    
+        
     #extract articles from url
     num = 0
     for url in urlList:
@@ -57,15 +72,13 @@ def main():
             article.download()
             article.parse()
             #print(article.authors)
-            articleList += [article.text]
+            text = preprocess(article.text)
+            articleList += [text]
         except Exception:
             continue
         num += 1
         
-    dist = FreqDist()
-    stop_words = set(stopwords.words('english')) 
-    wnl = nltk.WordNetLemmatizer()
-    ps = PorterStemmer()
+    
 
 
     #tfidf
