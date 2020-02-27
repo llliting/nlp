@@ -1,16 +1,54 @@
 from newspaper import Article
- 
-url = "https://www.wsj.com/articles/dear-voter-heres-why-political-texts-are-blowing-up-your-phone-11582210800?mod=hp_lead_pos10"
+import nltk
+import string
+import re
+from nltk.tokenize import word_tokenize
+from nltk.probability import FreqDist
+from nltk.stem import PorterStemmer 
+from nltk.corpus import stopwords 
+#from wsjsample.py import sentimentScore
 
-article = Article(url)
+fileName = "/Users/liting/Desktop/nlp/articles.txt"
 
-article.download()
+f = open(fileName,"r",encoding="utf-8" )
 
-article.parse()
+urlList = f.readlines()
+articleList = []
 
-print(article.authors)
+def removePunc(txt):
+    remove = string.punctuation
+    remove = remove.replace("-", "") # don't remove hyphens
+    pattern = r"[{}]".format(remove) # create the pattern
+    txt = re.sub(pattern, "", txt)    
+    return txt
 
-print(article.text)
+
+for url in urlList:
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        #print(article.authors)
+        articleList += [article.text]
+    except Exception:
+        continue
+    
+
+dist = FreqDist()
+stop_words = set(stopwords.words('english')) 
+wnl = nltk.WordNetLemmatizer()
+ps = PorterStemmer()
 
 
-print((type)(article.text))
+for t in articleList:      
+    t = removePunc(t)
+    for word in word_tokenize(t):
+        if not word in stop_words:
+            word = wnl.lemmatize(word)
+            word = ps.stem(word)
+            dist[word.lower()] += 1
+    
+    
+    
+   
+
