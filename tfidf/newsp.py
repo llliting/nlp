@@ -54,7 +54,7 @@ def freqDic(text):
             word = wnl.lemmatize(word)
             word = ps.stem(word)
             freqDic[word.lower()] += 1
-    return freqDic  #, counter 
+    return freqDic  
 
 
 #compute term frequency in an article: 
@@ -91,7 +91,7 @@ def computeTFIDF(tfBagOfWords, idfs):
     return tfidf
 
 def main():
-    fileName = "/Users/liting/Desktop/nlp/articles.txt"
+    fileName = "articles.txt"
     f = open(fileName,"r",encoding="utf-8" )
     urlList = f.readlines()
     articleList = []

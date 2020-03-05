@@ -29,7 +29,7 @@ af = Afinn()
 
 
 #read data
-data = pd.read_csv("/Users/liting/Desktop/nlp/WSJSample.csv",encoding='ISO-8859-1')
+data = pd.read_csv("WSJSample.csv",encoding='ISO-8859-1')
 titles = data['Title']
 abstract = data['Abstract']
 year = data['year']
