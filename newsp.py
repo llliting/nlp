@@ -46,22 +46,20 @@ def removePunc(txt):
 
 
 def freqDic(text):
-   
     wnl = nltk.WordNetLemmatizer()
     ps = PorterStemmer()
     stop_words = set(stopwords.words('english')) 
-    if(type(text) is str):
-        text = removePunc(text)
-        counter = 0
-        freqDic = {}
-        for word in word_tokenize(text):
-            if not word in stop_words:
-                word = wnl.lemmatize(word)
-                word = ps.stem(word)
-                freqDic[word.lower()] += 1
-                counter += 1
-        for key in freqDic:
-            freqDic[key] = freqDic[key]/float(counter)
+    text = removePunc(text)
+    counter = 0
+    freqDic = {}
+    for word in word_tokenize(text):
+        if not word in stop_words:
+            word = wnl.lemmatize(word)
+            word = ps.stem(word)
+            freqDic[word.lower()] += 1
+            counter += 1
+    for key in freqDic:
+        freqDic[key] = freqDic[key]/float(counter)
     return freqDic, counter 
 
 
@@ -125,13 +123,15 @@ def main():
     
     tf = []
     for article in articleList:
-        text = removePunc(article)
-        tf += freqDic(text)
+        if(type(article) is str):
+            text = removePunc(article)
+            tf += freqDic(text)
         
     idfDict = computeIDF(tf)
     computeTFIDF(tf,idfDict)
         
 main()
+
 
     #tfidf
 
@@ -206,4 +206,3 @@ main()
                 dist[word.lower()] += 1
 '''
        
-    
