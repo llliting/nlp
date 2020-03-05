@@ -51,24 +51,24 @@ def freqDic(text):
     stop_words = set(stopwords.words('english')) 
     text = removePunc(text)
     counter = 0
-    freqDic = {}
+    freqDic = FreqDist()
     for word in word_tokenize(text):
         if not word in stop_words:
             word = wnl.lemmatize(word)
             word = ps.stem(word)
             freqDic[word.lower()] += 1
-            counter += 1
-    for key in freqDic:
-        freqDic[key] = freqDic[key]/float(counter)
-    return freqDic, counter 
+            #counter += 1
+    #for key in freqDic:
+        #freqDic[key] = freqDic[key]/float(counter)
+    return freqDic  #, counter 
 
 
 #compute term frequency in an article: 
 def computeTF(wordDict, articleStr):
     tfDict = {}
-    bagOfWordsCount = len(articleStr)
+    wordCount = len(articleStr)
     for word, count in wordDict.items():
-        tfDict[word] = count / float(bagOfWordsCount)
+        tfDict[word] = count / float(wordCount)
     return tfDict
 
 
@@ -98,8 +98,6 @@ def computeTFIDF(tfBagOfWords, idfs):
 
 def main():
     #dist = FreqDist()
-    
-    
     fileName = "/Users/liting/Desktop/nlp/articles.txt"
     f = open(fileName,"r",encoding="utf-8" )
     urlList = f.readlines()
@@ -113,19 +111,20 @@ def main():
             article.download()
             article.parse()
             #print(article.authors)
-            text = preprocess(article.text)
-            articleList += [text]
+            #text = preprocess(article.text)
+            articleList += [article.text]
         except Exception:
             continue
         num += 1
-        
-    
+            
+    #print(articleList)
     
     tf = []
     for article in articleList:
         if(type(article) is str):
             text = removePunc(article)
-            tf += freqDic(text)
+            tf += [computeTF(freqDic(text), text)]
+    print(tf)
         
     idfDict = computeIDF(tf)
     computeTFIDF(tf,idfDict)
