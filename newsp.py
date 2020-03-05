@@ -13,6 +13,11 @@ import math
 
 #from wsjsample.py import sentimentScore
 
+
+
+
+#preprocess the text; remove the stopwords, punctuations;
+#return a text string 
 def preprocess(txt):
     wnl = nltk.WordNetLemmatizer()
     ps = PorterStemmer()
@@ -31,13 +36,48 @@ def preprocess(txt):
     dt.detokenize(words)
     return words
 
-def computeTF(wordDict, bagOfWords):
+
+def removePunc(txt):
+    remove = string.punctuation
+    remove = remove.replace("-", "") # don't remove hyphens
+    pattern = r"[{}]".format(remove) # create the pattern
+    txt = re.sub(pattern, "", txt)    
+    return txt
+
+
+def freqDic(text):
+   
+    wnl = nltk.WordNetLemmatizer()
+    ps = PorterStemmer()
+    stop_words = set(stopwords.words('english')) 
+    if(type(text) is str):
+        text = removePunc(text)
+        counter = 0
+        freqDic = {}
+        for word in word_tokenize(text):
+            if not word in stop_words:
+                word = wnl.lemmatize(word)
+                word = ps.stem(word)
+                freqDic[word.lower()] += 1
+                counter += 1
+        for key in freqDic:
+            freqDic[key] = freqDic[key]/float(counter)
+    return freqDic, counter 
+
+
+#compute term frequency in an article: 
+def computeTF(wordDict, articleStr):
     tfDict = {}
-    bagOfWordsCount = len(bagOfWords)
+    bagOfWordsCount = len(articleStr)
     for word, count in wordDict.items():
         tfDict[word] = count / float(bagOfWordsCount)
     return tfDict
 
+
+
+#The log of the number of documents divided by 
+#the number of documents that contain the word w. 
+#take in a list of dicts and return a idf dictionary 
 def computeIDF(documents):
     N = len(documents)
     idfDict = dict.fromkeys(documents[0].keys(), 0)
@@ -49,6 +89,9 @@ def computeIDF(documents):
         idfDict[word] = math.log(N / float(val))
     return idfDict
 
+
+
+#multiply TF and IDF 
 def computeTFIDF(tfBagOfWords, idfs):
     tfidf = {}
     for word, val in tfBagOfWords.items():
@@ -79,10 +122,22 @@ def main():
         num += 1
         
     
-
+    
+    tf = []
+    for article in articleList:
+        text = removePunc(article)
+        tf += freqDic(text)
+        
+    idfDict = computeIDF(tf)
+    computeTFIDF(tf,idfDict)
+        
+main()
 
     #tfidf
-    '''
+
+
+
+'''
     uniquewords = set(word_tokenize(articleList[0]))
     for t in articleList:      
         t = removePunc(t)
@@ -107,11 +162,12 @@ def main():
     print("df\n" + df)
     print(uniquewords)
     print(num)
-    '''
+'''
     #vectorizer = TfidfVectorizer()
     #ectors = vectorizer.fit_transform(articleList)
     
     
+    '''
     vectorizer = TfidfVectorizer()
     vectors = vectorizer.fit_transform(articleList)
     feature_names = vectorizer.get_feature_names()
@@ -120,11 +176,11 @@ def main():
     df = pd.DataFrame(denselist, columns=feature_names)
     df = df.transpose()
     print(df)
-    df.to_csv(r'tfidf.csv')
+    '''
+   # df.to_csv(r'tfidf.csv')
 
     
     #print(vectors)
-main()
     
 
                 
