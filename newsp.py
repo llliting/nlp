@@ -14,8 +14,6 @@ import math
 #from wsjsample.py import sentimentScore
 
 
-
-
 #preprocess the text; remove the stopwords, punctuations;
 #return a text string 
 def preprocess(txt):
@@ -56,9 +54,6 @@ def freqDic(text):
             word = wnl.lemmatize(word)
             word = ps.stem(word)
             freqDic[word.lower()] += 1
-            #counter += 1
-    #for key in freqDic:
-        #freqDic[key] = freqDic[key]/float(counter)
     return freqDic  #, counter 
 
 
@@ -71,13 +66,11 @@ def computeTF(wordDict, articleStr):
     return tfDict
 
 
-
 #The log of the number of documents divided by 
 #the number of documents that contain the word w. 
 #take in a list of dicts and return a idf dictionary 
 def computeIDF(documents):
     N = len(documents)
-    print("N" ,N)
     idfDict = dict.fromkeys(documents[0].keys(), 0)
     for document in documents:
         for word, val in document.items():
@@ -90,8 +83,6 @@ def computeIDF(documents):
         idfDict[word] = math.log(N / float(val))
     return idfDict
 
-
-
 #multiply TF and IDF 
 def computeTFIDF(tfBagOfWords, idfs):
     tfidf = {}
@@ -100,12 +91,10 @@ def computeTFIDF(tfBagOfWords, idfs):
     return tfidf
 
 def main():
-    #dist = FreqDist()
     fileName = "/Users/liting/Desktop/nlp/articles.txt"
     f = open(fileName,"r",encoding="utf-8" )
     urlList = f.readlines()
     articleList = []
-        
     #extract articles from url
     num = 0
     for url in urlList:
@@ -119,18 +108,25 @@ def main():
         except Exception:
             continue
         num += 1
-            
-    #print(articleList)
-    
+    #compute TFIDF
     tf = []
     for article in articleList:
         if(type(article) is str):
             text = removePunc(article)
             tf += [computeTF(freqDic(text), text)]
-    #print(tf)
-        
     idfDict = computeIDF(tf)
-    computeTFIDF(tf,idfDict)
+    tfidfs = []
+    for t in tf:
+        tfidfs += [computeTFIDF(t,idfDict)]
+    
+    df = pd.DataFrame(tfidfs)  
+    
+    #print(df)
+    #df = pd.DataFrame(tfidfs, columns=)
+    df = df.transpose()
+    #print(df)
+    
+    df.to_csv(r'tfidf.csv')
         
 main()
 
