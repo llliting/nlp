@@ -50,7 +50,6 @@ def freqDic(text):
     ps = PorterStemmer()
     stop_words = set(stopwords.words('english')) 
     text = removePunc(text)
-    counter = 0
     freqDic = FreqDist()
     for word in word_tokenize(text):
         if not word in stop_words:
@@ -78,11 +77,15 @@ def computeTF(wordDict, articleStr):
 #take in a list of dicts and return a idf dictionary 
 def computeIDF(documents):
     N = len(documents)
+    print("N" ,N)
     idfDict = dict.fromkeys(documents[0].keys(), 0)
     for document in documents:
         for word, val in document.items():
             if val > 0:
-                idfDict[word] += 1
+                if word not in idfDict:
+                    idfDict[word] = 1
+                else:
+                    idfDict[word] += 1
     for word, val in idfDict.items():
         idfDict[word] = math.log(N / float(val))
     return idfDict
@@ -124,7 +127,7 @@ def main():
         if(type(article) is str):
             text = removePunc(article)
             tf += [computeTF(freqDic(text), text)]
-    print(tf)
+    #print(tf)
         
     idfDict = computeIDF(tf)
     computeTFIDF(tf,idfDict)
