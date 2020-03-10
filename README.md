@@ -1,4 +1,4 @@
-#NLP Research Write-Up
+# NLP Research Write-Up
 
  This research aims to extract sentiment level from past journal articles and to identify the relationship between the sentiment level and the current stock market performance. Many text mining, data science, and machine learning techniques are utilized to optimize the project. 
  
